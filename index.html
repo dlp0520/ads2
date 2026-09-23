@@ -6,446 +6,377 @@
     <title>Dashboard - Gestión de Canchas</title>
     
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter for a modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f4f6f9; /* AdminLTE light gray background */
+            background-color: #f4f6f9;
             color: #333;
         }
-
-        /* Modern Navbar Styling */
         .navbar-custom {
-            background-color: #1e3a8a; /* Deep primary blue */
+            background-color: #003366;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .navbar-custom .navbar-brand {
-            color: #ffffff;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        /* Card Styling (Soft shadows, rounded corners) */
-        .admin-card {
+        .card {
             border: none;
             border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             margin-bottom: 1.5rem;
-            background-color: #ffffff;
-            transition: box-shadow 0.3s ease;
+            transition: transform 0.2s;
         }
-        .admin-card:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        
-        .admin-card-header {
-            background-color: transparent;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding: 1rem 1.25rem;
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #edf2f9;
             font-weight: 600;
             color: #2c3e50;
+            border-radius: 0.5rem 0.5rem 0 0 !important;
+        }
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            font-size: 1.5rem;
         }
-
-        .admin-card-body {
-            padding: 1.5rem;
+        .bg-light-primary { background-color: #e0f3ff; color: #007bff; }
+        .bg-light-success { background-color: #e6f9ed; color: #28a745; }
+        .bg-light-warning { background-color: #fff8e5; color: #ffc107; }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
         }
-
-        /* Custom form inputs */
-        .form-control-modern {
-            border-radius: 0.375rem;
-            border: 1px solid #ced4da;
-            padding: 0.375rem 0.75rem;
-        }
-        .form-control-modern:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
-        }
-
-        /* Result badges */
-        .result-box {
-            background-color: #f8f9fa;
-            border-left: 4px solid #198754; /* Success green */
-            padding: 1rem;
-            border-radius: 0.25rem;
-            margin-top: 1rem;
-        }
-        .result-box.primary-border {
-            border-left-color: #0d6efd; /* Primary blue */
-        }
-
-        /* Icon colors */
-        .text-primary-custom { color: #3b82f6; }
-        .text-success-custom { color: #10b981; }
-        .text-warning-custom { color: #f59e0b; }
-        .text-danger-custom { color: #ef4444; }
-
-        .chart-container {
-            min-height: 350px;
-            width: 100%;
+        .stat-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-custom mb-4 py-3">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <i class="fas fa-futbol"></i>
-                <span>Gestión de Canchas</span>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fa-solid fa-futbol me-2"></i> Admin Canchas
             </a>
-            <div class="d-flex text-white align-items-center gap-3">
-                <div class="dropdown">
-                    <a href="#" class="text-white text-decoration-none dropdown-toggle d-flex align-items-center gap-2" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="Admin" class="rounded-circle" width="32" height="32">
-                        <span class="d-none d-md-inline">Administrador</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-muted"></i> Perfil</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-muted"></i> Configuración</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-muted"></i> Salir</a></li>
-                    </ul>
-                </div>
+            <div class="d-flex align-items-center">
+                <span class="text-light me-3"><i class="fa-solid fa-user-circle"></i> Administrador</span>
             </div>
         </div>
     </nav>
 
-    <main class="container-fluid px-4 px-md-5 pb-5">
+    <div class="container-fluid px-4">
         
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h4 text-gray-800 mb-0 fw-bold">Dashboard Resumen</h2>
-            <button class="btn btn-primary btn-sm shadow-sm d-none d-md-inline-block">
-                <i class="fas fa-download fa-sm text-white-50"></i> Generar Reporte
-            </button>
-        </div>
-
-        <h5 class="mb-3 text-secondary fw-semibold fs-6 text-uppercase letter-spacing-1">Datos Predictivos</h5>
+        <!-- MÓDULO 1: DATOS PREDICTIVOS -->
+        <h5 class="mb-3 text-secondary"><i class="fa-solid fa-wand-magic-sparkles"></i> Módulo Predictivo</h5>
         <div class="row">
-            
-            <!-- Card 1: Demanda Futura -->
-            <div class="col-xl-6 col-lg-6 mb-4">
-                <div class="card admin-card h-100">
-                    <div class="admin-card-header">
-                        <i class="fas fa-chart-pie text-primary-custom"></i>
-                        Demanda futura de canchas
+            <!-- Caso de Uso: Demanda futura -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Demanda futura de canchas</span>
+                        <i class="fa-solid fa-users text-primary"></i>
                     </div>
-                    <div class="admin-card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <label class="form-label text-muted small fw-semibold mb-2">Seleccione rango de fechas para estimación</label>
-                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                <div class="input-group input-group-sm w-auto flex-grow-1">
-                                    <span class="input-group-text bg-light text-muted border-end-0">De</span>
-                                    <input type="date" class="form-control form-control-modern border-start-0 ps-0" value="2026-10-01">
-                                </div>
-                                <div class="input-group input-group-sm w-auto flex-grow-1">
-                                    <span class="input-group-text bg-light text-muted border-end-0">A</span>
-                                    <input type="date" class="form-control form-control-modern border-start-0 ps-0" value="2026-10-31">
-                                </div>
-                                <button class="btn btn-primary btn-sm px-3 shadow-sm"><i class="fas fa-calculator"></i> Calcular</button>
-                            </div>
+                    <div class="card-body">
+                        <label class="form-label text-muted small">Elegir rango de fecha:</label>
+                        <div class="d-flex gap-2 align-items-center mb-3">
+                            <span>De:</span>
+                            <input type="date" class="form-control form-control-sm">
+                            <span>a:</span>
+                            <input type="date" class="form-control form-control-sm">
+                            <button class="btn btn-primary btn-sm" onclick="calcularDemanda()"><i class="fa-solid fa-check"></i></button>
                         </div>
-                        <div class="result-box primary-border mt-auto">
-                            <span class="d-block text-muted small text-uppercase fw-bold mb-1">Resultado Estimado</span>
-                            <span class="fs-4 fw-bold text-dark"><i class="fas fa-calendar-check text-primary-custom me-2"></i> 142 Reservas</span>
-                            <span class="d-block text-success small mt-1"><i class="fas fa-arrow-up"></i> +12% comparado al mes anterior</span>
+                        <div class="p-3 bg-light rounded text-center">
+                            <span class="text-muted">Resultado Proyectado:</span>
+                            <h3 class="mb-0 text-primary fw-bold" id="res-demanda">-- Reservas</h3>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Card 2: Proyección de Ingresos -->
-            <div class="col-xl-6 col-lg-6 mb-4">
-                <div class="card admin-card h-100">
-                    <div class="admin-card-header">
-                        <i class="fas fa-hand-holding-usd text-success-custom"></i>
-                        Proyección de ingresos
+            <!-- Caso de Uso: Proyección de ingresos -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Proyección de ingresos</span>
+                        <i class="fa-solid fa-money-bill-trend-up text-success"></i>
                     </div>
-                    <div class="admin-card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <label class="form-label text-muted small fw-semibold mb-2">Seleccione rango temporal</label>
-                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                <div class="input-group input-group-sm w-auto flex-grow-1">
-                                    <span class="input-group-text bg-light text-muted border-end-0">De</span>
-                                    <input type="date" class="form-control form-control-modern border-start-0 ps-0" value="2026-10-01">
-                                </div>
-                                <div class="input-group input-group-sm w-auto flex-grow-1">
-                                    <span class="input-group-text bg-light text-muted border-end-0">A</span>
-                                    <input type="date" class="form-control form-control-modern border-start-0 ps-0" value="2026-10-31">
-                                </div>
-                                <button class="btn btn-success btn-sm px-3 shadow-sm"><i class="fas fa-calculator"></i> Calcular</button>
-                            </div>
+                    <div class="card-body">
+                        <label class="form-label text-muted small">Elegir rango de tiempo:</label>
+                        <div class="d-flex gap-2 align-items-center mb-3">
+                            <span>De:</span>
+                            <input type="date" class="form-control form-control-sm">
+                            <span>a:</span>
+                            <input type="date" class="form-control form-control-sm">
+                            <button class="btn btn-success btn-sm" onclick="calcularIngresos()"><i class="fa-solid fa-check"></i></button>
                         </div>
-                        <div class="result-box mt-auto">
-                            <span class="d-block text-muted small text-uppercase fw-bold mb-1">Ingreso Proyectado</span>
-                            <span class="fs-4 fw-bold text-dark"><i class="fas fa-money-bill-wave text-success-custom me-2"></i> $12,450.00</span>
-                            <span class="d-block text-muted small mt-1">Basado en el histórico de ocupación y tarifas actuales.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-12 mb-4">
-                <div class="card admin-card" id="prob-card">
-                    <div class="admin-card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="fas fa-percentage text-warning-custom" id="prob-icon"></i>
-                            Probabilidad de ajustar precios
-                        </div>
-                        <button class="btn btn-sm btn-outline-secondary shadow-sm" id="btn-refresh-prob" title="Recalcular probabilidad">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
-                    </div>
-                    <div class="admin-card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-7 mb-3 mb-md-0">
-                                <h6 class="fw-bold mb-2">Análisis del Sistema Predictivo</h6>
-                                <p class="text-muted mb-3">El algoritmo evalúa fluctuaciones de demanda, registro de pagos e inflación para determinar si es necesario ajustar el tarifario actual.</p>
-                                
-                                <!-- Alerta de recomendación (Oculta por defecto) -->
-                                <div id="price-recommendation" class="alert d-none mb-0 py-2 align-items-center" role="alert">
-                                    <!-- Contenido dinámico inyectado por JS -->
-                                </div>
-                            </div>
-                            <div class="col-md-5 text-center text-md-end">
-                                <div class="mb-1 d-flex justify-content-between align-items-center px-1">
-                                    <span class="fw-bold text-dark">Probabilidad actual</span>
-                                    <span class="fw-bold fs-4" id="price-prob-text">0%</span>
-                                </div>
-                                <div class="progress mb-3" style="height: 12px; border-radius: 10px;">
-                                    <div id="price-prob-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <button class="btn btn-outline-primary btn-sm w-100"><i class="fas fa-cog"></i> Evaluar Nuevas Tarifas</button>
-                            </div>
+                        <div class="p-3 bg-light rounded text-center">
+                            <span class="text-muted">Ingreso Proyectado:</span>
+                            <h3 class="mb-0 text-success fw-bold" id="res-ingresos">Bs. --</h3>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <h5 class="mb-3 text-secondary fw-semibold fs-6 text-uppercase letter-spacing-1 mt-2">Estadísticas y Rendimiento</h5>
+        <!-- MÓDULO 2: PROBABILIDAD DE PRECIOS -->
+        <h5 class="mt-4 mb-3 text-secondary"><i class="fa-solid fa-tags"></i> Ajuste Dinámico de Precios</h5>
         <div class="row">
-            <div class="col-12 mb-4">
-                <div class="card admin-card">
-                    <div class="admin-card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="fas fa-chart-area text-info"></i>
-                            Evolución: Reservas vs Ingresos (Últimos 6 meses)
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-light border dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Últimos 6 meses
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 fw-bold text-dark">Probabilidad actual de cambiar los precios este mes</h6>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="generarProbabilidad()">
+                                <i class="fa-solid fa-rotate"></i> Simular
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Último mes</a></li>
-                                <li><a class="dropdown-item" href="#">Últimos 3 meses</a></li>
-                                <li><a class="dropdown-item active" href="#">Últimos 6 meses</a></li>
-                                <li><a class="dropdown-item" href="#">Este año</a></li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="admin-card-body">
-                        <!-- Chart container -->
-                        <div id="performance-chart" class="chart-container"></div>
+                        
+                        <div class="progress mb-2" style="height: 25px;">
+                            <div id="prob-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">20%</div>
+                        </div>
+                        <p id="prob-text" class="small text-muted mb-3">Estabilidad de precios normal. No se sugieren cambios.</p>
+
+                        <!-- Caja de Alerta Dinámica (Oculta por defecto) -->
+                        <div id="prob-alert" class="alert d-none align-items-center" role="alert">
+                            <i id="prob-icon" class="fa-solid fa-circle-exclamation fs-4 me-3"></i>
+                            <div>
+                                <h6 class="alert-heading mb-1 fw-bold" id="prob-title">Acción Recomendada: </h6>
+                                <p class="mb-0 small" id="prob-desc">Descripción de la recomendación.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-    </main>
+        <!-- MÓDULO 3: ESTADÍSTICAS -->
+        <h5 class="mt-4 mb-3 text-secondary"><i class="fa-solid fa-chart-simple"></i> Generación de Estadísticas</h5>
+        <div class="row">
+            <!-- Caso de Uso: Estadísticas de Reserva -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Estadísticas de Reserva (Mensual)</h6>
+                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-box bg-light-primary"><i class="fa-solid fa-calendar-check"></i></div>
+                                <div>
+                                    <p class="stat-label">Total Reservas Efectivas</p>
+                                    <p class="stat-value text-dark">452</p>
+                                </div>
+                            </div>
+                            <span class="badge bg-success">+12% <i class="fa-solid fa-arrow-up"></i></span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between pt-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-box bg-light-warning"><i class="fa-solid fa-ban"></i></div>
+                                <div>
+                                    <p class="stat-label">Tasa de Cancelación</p>
+                                    <p class="stat-value text-dark">8.5%</p>
+                                </div>
+                            </div>
+                            <span class="badge bg-danger">-2% <i class="fa-solid fa-arrow-down"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- ApexCharts Library -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            <!-- Caso de Uso: Estadísticas de Pago -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Estadísticas de Pago (Mensual)</h6>
+                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-box bg-light-success"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                                <div>
+                                    <p class="stat-label">Pagos Recaudados</p>
+                                    <p class="stat-value text-dark">Bs. 32,450</p>
+                                </div>
+                            </div>
+                            <span class="badge bg-success">Completado</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between pt-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-box" style="background-color: #ffe5e5; color: #dc3545;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                                <div>
+                                    <p class="stat-label">Pagos Pendientes (Anticipos)</p>
+                                    <p class="stat-value text-dark">Bs. 4,120</p>
+                                </div>
+                            </div>
+                            <span class="badge bg-warning text-dark">Por Cobrar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        <!-- MÓDULO 4: GRÁFICOS VISUALES -->
+        <h5 class="mt-4 mb-3 text-secondary"><i class="fa-solid fa-chart-pie"></i> Análisis Visual y Gráficos</h5>
+        <div class="row">
+            <!-- Caso de Uso: Gráfico de Reservas -->
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header">Tendencia de Reservas vs Ingresos</div>
+                    <div class="card-body">
+                        <div id="chart-reservas"></div>
+                    </div>
+                </div>
+            </div>
             
-            // Configuration for the mixed Area & Column chart
-            var options = {
-                series: [{
-                    name: 'Cantidad de Reservas',
-                    type: 'column',
-                    data: [120, 135, 125, 155, 170, 142]
-                }, {
-                    name: 'Ingresos ($)',
-                    type: 'area',
-                    data: [8500, 9200, 8900, 11000, 12500, 10800]
-                }],
-                chart: {
-                    height: 380,
-                    type: 'line', // Mixed charts start as 'line'
-                    fontFamily: 'Inter, sans-serif',
-                    toolbar: {
-                        show: true,
-                        tools: { download: true, selection: true, zoom: false, pan: false }
-                    }
-                },
-                stroke: {
-                    width: [0, 3], // 0 width for column, 3px for area line
-                    curve: 'smooth'
-                },
-                plotOptions: {
-                    bar: {
-                        columnWidth: '40%',
-                        borderRadius: 4
-                    }
-                },
-                fill: {
-                    type: ['solid', 'gradient'],
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.45,
-                        opacityTo: 0.05,
-                        stops: [20, 100]
-                    }
-                },
-                colors: ['#3b82f6', '#10b981'], // Primary Blue and Success Green
-                labels: ['May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct'],
-                markers: {
-                    size: [0, 4],
-                    colors: ['#fff'],
-                    strokeColors: '#10b981',
-                    strokeWidth: 2,
-                    hover: { size: 7 }
-                },
-                xaxis: {
-                    type: 'category',
-                    axisBorder: { show: false },
-                    axisTicks: { show: false },
-                    labels: {
-                        style: { colors: '#64748b', fontWeight: 500 }
-                    }
-                },
-                yaxis: [{
-                    title: {
-                        text: 'N° de Reservas',
-                        style: { color: '#3b82f6', fontWeight: 600 }
-                    },
-                    labels: {
-                        style: { colors: '#3b82f6' }
-                    }
-                }, {
-                    opposite: true,
-                    title: {
-                        text: 'Ingresos Totales ($)',
-                        style: { color: '#10b981', fontWeight: 600 }
-                    },
-                    labels: {
-                        style: { colors: '#10b981' },
-                        formatter: function (value) {
-                            return "$" + value.toLocaleString();
-                        }
-                    }
-                }],
-                grid: {
-                    borderColor: '#f1f5f9',
-                    strokeDashArray: 4,
-                    yaxis: { lines: { show: true } }
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right'
-                },
-                tooltip: {
-                    shared: true,
-                    intersect: false,
-                    y: {
-                        formatter: function (y, { seriesIndex }) {
-                            if (typeof y !== "undefined") {
-                                return seriesIndex === 0 ? y.toFixed(0) + " reservas" : "$" + y.toLocaleString();
-                            }
-                            return y;
-                        }
-                    }
-                }
-            };
+            <!-- Caso de Uso: Gráfico de Canchas -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">Canchas más solicitadas</div>
+                    <div class="card-body d-flex justify-content-center">
+                        <div id="chart-canchas"></div>
+                    </div>
+                </div>
+            </div>
 
-            var chart = new ApexCharts(document.querySelector("#performance-chart"), options);
-            chart.render();
+            <!-- Caso de Uso: Gráfico de Clientes -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">Comportamiento de Clientes</div>
+                    <div class="card-body">
+                        <div id="chart-clientes"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            // --- LÓGICA DE PROBABILIDAD DE PRECIOS ---
-            function updatePriceProbability() {
-                // 1. Generar probabilidad aleatoria entre 0 y 100
-                const prob = Math.floor(Math.random() * 101);
+    </div>
+
+    <!-- ApexCharts JS -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script>
+        // --- FUNCIONES SIMULADAS PARA DATOS PREDICTIVOS ---
+        function calcularDemanda() {
+            let valor = Math.floor(Math.random() * (400 - 100 + 1)) + 100;
+            document.getElementById('res-demanda').innerText = valor + " Reservas";
+        }
+
+        function calcularIngresos() {
+            let valor = Math.floor(Math.random() * (15000 - 3000 + 1)) + 3000;
+            document.getElementById('res-ingresos').innerText = "Bs. " + valor.toLocaleString();
+        }
+
+        // --- LÓGICA DE PROBABILIDAD DE PRECIOS ---
+        function generarProbabilidad() {
+            let prob = Math.floor(Math.random() * 101); // 0 a 100
+            let barra = document.getElementById('prob-bar');
+            let texto = document.getElementById('prob-text');
+            let alerta = document.getElementById('prob-alert');
+            
+            // Actualizar UI de la barra
+            barra.style.width = prob + '%';
+            barra.innerText = prob + '%';
+            barra.className = 'progress-bar progress-bar-striped progress-bar-animated';
+            
+            // Ocultar alerta inicialmente
+            alerta.classList.remove('d-flex', 'alert-danger', 'alert-primary');
+            alerta.classList.add('d-none');
+
+            if (prob < 40) {
+                barra.classList.add('bg-success');
+                texto.innerText = "Baja probabilidad. El mercado está estable.";
+            } else if (prob < 75) {
+                barra.classList.add('bg-warning');
+                texto.innerText = "Probabilidad moderada. Monitorear fluctuaciones.";
+            } else {
+                // Probabilidad alta (>= 75) - Sugerir acción
+                barra.classList.add('bg-danger');
+                texto.innerText = "¡Alta probabilidad de que se requiera ajustar precios!";
                 
-                const probText = document.getElementById('price-prob-text');
-                const probProgress = document.getElementById('price-prob-progress');
-                const recommendationAlert = document.getElementById('price-recommendation');
-                const probIcon = document.getElementById('prob-icon');
+                // Determinar si subir o bajar aleatoriamente para el ejemplo
+                let accionSubir = Math.random() > 0.5;
+                
+                alerta.classList.remove('d-none');
+                alerta.classList.add('d-flex');
 
-                // 2. Actualizar texto y tamaño de la barra
-                probText.innerText = prob + '%';
-                probProgress.style.width = prob + '%';
-                probProgress.setAttribute('aria-valuenow', prob);
-
-                // Reiniciar clases para evitar superposiciones
-                probProgress.className = 'progress-bar progress-bar-striped progress-bar-animated';
-                probText.className = 'fw-bold fs-4';
-                probIcon.className = 'fas fa-percentage';
-                recommendationAlert.className = 'alert d-none mb-0 py-3 align-items-center shadow-sm border-0'; 
-
-                // 3 & 4. Lógica condicional basada en el porcentaje (>= 75%)
-                if (prob >= 75) {
-                    // UI para probabilidad Alta
-                    probProgress.classList.add('bg-danger');
-                    probText.classList.add('text-danger');
-                    probIcon.classList.add('text-danger');
-                    
-                    // Decidir aleatoriamente si recomendar SUBIR o BAJAR
-                    const action = Math.random() > 0.5 ? 'SUBIR' : 'BAJAR';
-                    
-                    if (action === 'SUBIR') {
-                        recommendationAlert.classList.add('bg-warning', 'bg-opacity-25', 'text-dark', 'd-flex');
-                        recommendationAlert.classList.remove('d-none');
-                        recommendationAlert.innerHTML = '<i class="fas fa-arrow-circle-up me-3 fs-2 text-warning"></i><div><strong class="d-block mb-1">Recomendación Crítica</strong> Se sugiere fuertemente <strong>SUBIR</strong> los precios de las canchas este mes debido a la alta demanda.</div>';
-                    } else {
-                        recommendationAlert.classList.add('bg-info', 'bg-opacity-25', 'text-dark', 'd-flex');
-                        recommendationAlert.classList.remove('d-none');
-                        recommendationAlert.innerHTML = '<i class="fas fa-arrow-circle-down me-3 fs-2 text-info"></i><div><strong class="d-block mb-1">Recomendación Crítica</strong> Se sugiere fuertemente <strong>BAJAR</strong> los precios para estimular la ocupación.</div>';
-                    }
-                    
-                } else if (prob >= 40) {
-                    // UI para probabilidad Media
-                    probProgress.classList.add('bg-warning');
-                    probText.classList.add('text-warning');
-                    probIcon.classList.add('text-warning');
+                if(accionSubir) {
+                    alerta.classList.add('alert-danger'); // Rojo para subir precios
+                    document.getElementById('prob-icon').className = "fa-solid fa-arrow-trend-up fs-4 me-3";
+                    document.getElementById('prob-title').innerText = "Recomendación: SUBIR PRECIOS";
+                    document.getElementById('prob-desc').innerText = "La demanda excede la disponibilidad. Se sugiere un incremento del 10% al 15% en horarios pico (Noches y Fines de semana).";
                 } else {
-                    // UI para probabilidad Baja
-                    probProgress.classList.add('bg-success');
-                    probText.classList.add('text-success');
-                    probIcon.classList.add('text-success');
+                    alerta.classList.add('alert-primary'); // Azul para bajar precios / promociones
+                    document.getElementById('prob-icon').className = "fa-solid fa-arrow-trend-down fs-4 me-3";
+                    document.getElementById('prob-title').innerText = "Recomendación: CREAR PROMOCIONES (BAJAR PRECIOS)";
+                    document.getElementById('prob-desc').innerText = "La ocupación está baja en horarios valle. Se sugiere aplicar un descuento del 20% de Lunes a Miércoles por las mañanas.";
                 }
             }
+        }
 
-            // Ejecutar cálculo inicial al cargar la página
-            updatePriceProbability();
+        // --- APEXCHARTS CONFIGURACIONES ---
 
-            // Vincular evento al botón de refrescar
-            document.getElementById('btn-refresh-prob').addEventListener('click', function() {
-                // Añadir un pequeño efecto visual de carga al ícono
-                const icon = this.querySelector('i');
-                icon.classList.add('fa-spin');
-                
-                // Retraso ligero para simular "procesamiento" predictivo
-                setTimeout(() => {
-                    updatePriceProbability();
-                    icon.classList.remove('fa-spin');
-                }, 400);
-            });
-        });
+        // 1. Gráfico de Reservas vs Ingresos (Mixto)
+        var optionsReservas = {
+            series: [{
+                name: 'Cantidad Reservas',
+                type: 'column',
+                data: [45, 52, 38, 85, 95, 110, 80]
+            }, {
+                name: 'Ingresos (Bs.)',
+                type: 'area',
+                data: [4500, 5200, 3800, 8500, 9500, 11000, 8000]
+            }],
+            chart: { height: 350, type: 'line', toolbar: { show: false } },
+            stroke: { width: [0, 2], curve: 'smooth' },
+            colors: ['#007bff', '#28a745'],
+            fill: { type: ['solid', 'gradient'], opacity: [1, 0.2] },
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            yaxis: [
+                { title: { text: 'Nro. Reservas' } },
+                { opposite: true, title: { text: 'Dinero (Bs.)' } }
+            ]
+        };
+        var chartReservas = new ApexCharts(document.querySelector("#chart-reservas"), optionsReservas);
+        chartReservas.render();
+
+        // 2. Gráfico de Canchas (Dona)
+        var optionsCanchas = {
+            series: [45, 30, 15, 10],
+            chart: { type: 'donut', height: 300 },
+            labels: ['Cancha de Césped 1', 'Cancha de Césped 2', 'Cancha de Cemento', 'Pista FutSal'],
+            colors: ['#28a745', '#20c997', '#6c757d', '#fd7e14'],
+            legend: { position: 'bottom' }
+        };
+        var chartCanchas = new ApexCharts(document.querySelector("#chart-canchas"), optionsCanchas);
+        chartCanchas.render();
+
+        // 3. Gráfico de Clientes (Barras Horizontales)
+        var optionsClientes = {
+            series: [{
+                name: 'Cantidad',
+                data: [320, 150, 45, 12]
+            }],
+            chart: { type: 'bar', height: 300, toolbar: { show: false } },
+            plotOptions: { bar: { borderRadius: 4, horizontal: true } },
+            dataLabels: { enabled: false },
+            xaxis: {
+                categories: ['Clientes Recurrentes', 'Nuevos (Este mes)', 'Equipos Fijos (Ligas)', 'Clientes Inactivos'],
+            },
+            colors: ['#003366']
+        };
+        var chartClientes = new ApexCharts(document.querySelector("#chart-clientes"), optionsClientes);
+        chartClientes.render();
+        
+        // Iniciar probabilidad al cargar
+        window.onload = function() { generarProbabilidad(); }
     </script>
 </body>
 </html>
